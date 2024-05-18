@@ -1,13 +1,14 @@
-import { getDownloadURL, ref } from 'firebase/storage';
-import { autoFetch } from '.';
-import notFoundImage from '@/assets/images/notFoundImg.jpg';
-import { storage } from '../configuration';
+import { getDownloadURL, ref } from "firebase/storage";
+import { autoFetch } from ".";
+import notFoundImage from "@/assets/images/notFoundImg.jpg";
+import { storage } from "../configuration";
+import { BrandVm, ProductCardInterface } from "@/shared";
 
 const getProductCardVmsByCategoryId = async (
   categoryId: string | undefined,
   field: string,
   dir: string,
-  brandId: string,
+  brandId: string
 ) => {
   const response = await autoFetch.get(`product/${categoryId}`, {
     params: {
@@ -16,7 +17,16 @@ const getProductCardVmsByCategoryId = async (
       brandId,
     },
   });
-  return response.data;
+  const content = await Promise.all(
+    response.data.content.map(async (product: ProductCardInterface) => {
+      const thumbnail = await getImageFromFireBase(product.thumbnail);
+      return {
+        ...product,
+        thumbnail,
+      };
+    })
+  );
+  return { ...response.data, content };
 };
 
 const getProductDetailVm = async (id: string | undefined) => {
@@ -29,7 +39,7 @@ const getProductGalleryVmByProductId = async (id: string | undefined) => {
 };
 
 const getCategoryVms = async () => {
-  return (await autoFetch.get('category')).data;
+  return (await autoFetch.get("category")).data;
 };
 
 const getImageFromFireBase = async (path: string) => {
@@ -43,7 +53,16 @@ const getImageFromFireBase = async (path: string) => {
 
 const getBrandsByCategoryId = async (categoryId: string | undefined) => {
   const response = await autoFetch.get(`brand/category-id/${categoryId}`);
-  return response.data;
+  const content = await Promise.all(
+    response.data.map(async (brand: BrandVm) => {
+      const imagePath = await getImageFromFireBase(brand.imagePath);
+      return {
+        ...brand,
+        imagePath,
+      };
+    })
+  );
+  return content;
 };
 
 export {
