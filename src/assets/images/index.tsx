@@ -7,6 +7,7 @@ import banner6 from '@/assets/images/banner6.png';
 import logo from '@/assets/images/logo.svg';
 import chibi from '@/assets/images/chibi2.png';
 import sampleProduct from '@/assets/images/sample-product.png';
+import cartLogo from '@/assets/images/cart-logo.png';
 const images = {
   banner1,
   banner2,
@@ -17,6 +18,7 @@ const images = {
   logo,
   chibi,
   sampleProduct,
+  cartLogo
 };
 
 export default images;

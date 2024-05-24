@@ -1,5 +1,5 @@
 import images from '@/assets/images';
-import { Box } from '@mui/joy';
+import { Box } from '@mui/material';
 const listBanner = [images.banner1, images.banner2, images.banner3];
 
 const Banner = () => {

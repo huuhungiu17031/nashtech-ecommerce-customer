@@ -1,13 +1,17 @@
 import { DynamicLink } from '@/components';
 import images from '@/assets/images';
 import { CART } from '@/shared';
-// import { useKeycloak } from '@/context';
-import { Box } from '@mui/joy';
+import { Box } from '@mui/material';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
-  // const { isAuthenticated } = useKeycloak();
-  const openModalLocation = () => {};
-  const openModalLogin = () => {};
+  const navigate = useNavigate();
+  const openModalLocation = () => {
+
+  };
+  const openModalLogin = () => {
+    navigate("/login")
+  };
   return (
     <Box
       sx={{

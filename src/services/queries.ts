@@ -1,29 +1,33 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQueries, useQuery } from "@tanstack/react-query";
 import {
   getBrandsByCategoryId,
+  getCartDetail,
   getCategoryVms,
   getProductCardVmsByCategoryId,
   getProductDetailVm,
+  getProductGalleryInCart,
   getProductGalleryVmByProductId,
-} from './api';
+} from "./api";
 
 export function useGetCategoryVms() {
   return useQuery({
-    queryKey: ['getCategoryVms'],
+    queryKey: ["getCategoryVms"],
     queryFn: getCategoryVms,
   });
 }
 
 export function useGetProductDetail(productId: string | undefined) {
   return useQuery({
-    queryKey: ['getProductDetail'],
+    queryKey: ["getProductDetail", productId],
     queryFn: () => getProductDetailVm(productId),
   });
 }
 
-export function useGetProductGalleryVmByProductId(productId: string | undefined) {
+export function useGetProductGalleryVmByProductId(
+  productId: string | undefined
+) {
   return useQuery({
-    queryKey: ['getProductGalleryVm'],
+    queryKey: ["getProductGalleryVm"],
     queryFn: () => getProductGalleryVmByProductId(productId),
   });
 }
@@ -32,18 +36,33 @@ export function useGetProductCardVmsByCategoryId(
   categoryId: string | undefined,
   field: string,
   dir: string,
-  brandId: string,
+  brandId: string
 ) {
-  console.log('useGetProductCardVmsByCategoryId');
   return useQuery({
-    queryKey: ['getProductCardVms', { field, dir, brandId }],
-    queryFn: () => getProductCardVmsByCategoryId(categoryId, field, dir, brandId),
+    queryKey: ["getProductCardVms", { field, dir, brandId }],
+    queryFn: () =>
+      getProductCardVmsByCategoryId(categoryId, field, dir, brandId),
   });
 }
 
 export function useGetBrandsByCategoryId(categoryId: string | undefined) {
   return useQuery({
-    queryKey: ['getBrandsByCategoryId'],
+    queryKey: ["getBrandsByCategoryId"],
     queryFn: () => getBrandsByCategoryId(categoryId),
+  });
+}
+
+export function useGetCartDetailByCartId(cartId = 1) {
+  return useQuery({
+    queryKey: ["getCartDetail", cartId],
+    queryFn: () => getCartDetail({ cartId }),
+  });
+}
+
+export function useGetProductGalleryInCart(productId: number) {
+  return useQuery({
+    queryKey: ["getProductGalleryInCart", productId],
+    queryFn: () => getProductGalleryInCart({ productId }),
+    enabled: !!productId,
   });
 }

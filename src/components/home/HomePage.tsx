@@ -1,5 +1,5 @@
 import images from '@/assets/images';
-import { Box, Grid } from '@mui/joy';
+import { Box, Grid } from '@mui/material';
 import { MainMenu } from '.';
 import { useGetCategoryVms } from '@/services';
 import { CircularLoading } from '..';
@@ -11,11 +11,11 @@ const HomePage = () => {
   return (
     <section>
       <Grid container spacing={2} sx={{ flexGrow: 1 }}>
-        <Grid xs={2}>
+        <Grid item xs={2}>
           <MainMenu categoryList={data} />
         </Grid>
-        <Grid xs={7}>{/* <BoxGallery /> */}</Grid>
-        <Grid xs={3}>
+        <Grid item xs={7}>{/* <BoxGallery /> */}</Grid>
+        <Grid item xs={3}>
           {listImages.map((item, index) => {
             return (
               <Box

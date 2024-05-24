@@ -1,29 +1,29 @@
-import { Box } from '@mui/joy';
-import { BrandVm } from '@/shared';
-import { useGetBrandsByCategoryId } from '@/services';
-import { DynamicLink } from '../partial';
+import { Box } from "@mui/material";
+import { BrandVm } from "@/shared";
+import { useGetBrandsByCategoryId } from "@/services";
+import { DynamicLink } from "../partial";
 const styles = {
   box: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(10, 1fr)',
+    display: "grid",
+    gridTemplateColumns: "repeat(10, 1fr)",
     gap: 2,
   },
   dynamicLink: {
-    border: '1px solid #e5e7eb',
-    display: 'flex',
-    alignItems: 'center',
-    width: '100%',
-    justifyContent: 'center',
-    margin: '0 10px 10px 0',
-    padding: '2px 4px',
+    border: "1px solid #e5e7eb",
+    display: "flex",
+    alignItems: "center",
+    width: "100%",
+    justifyContent: "center",
+    margin: "0 10px 10px 0",
+    padding: "2px 4px",
   },
   imageWrapper: {
-    display: 'flex',
-    alignItems: 'center',
+    display: "flex",
+    alignItems: "center",
   },
   image: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
   },
 };
 const Brand = ({
@@ -47,9 +47,14 @@ const Brand = ({
           <DynamicLink
             key={brand.id}
             style={styles.dynamicLink}
-            onClick={() => handleChangeBrand(brand.id)}>
+            onClick={() => handleChangeBrand(brand.id)}
+          >
             <Box sx={styles.imageWrapper}>
-              <img src={brand.imagePath} style={styles.image} alt={brand.name} />
+              <img
+                src={brand.imagePath}
+                style={styles.image}
+                alt={brand.name}
+              />
             </Box>
           </DynamicLink>
         ))}

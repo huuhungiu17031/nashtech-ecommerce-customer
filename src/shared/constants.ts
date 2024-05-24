@@ -1,0 +1,4 @@
+const COMPLETED = "COMPLETED";
+const CANCELLED = "CANCELLED";
+
+export { CANCELLED, COMPLETED };

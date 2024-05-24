@@ -4,7 +4,7 @@ import classNames from 'classnames/bind';
 import { NavLink } from 'react-router-dom';
 import { IconComponent } from './IconComponent';
 import { CategoryInterface } from '@/shared';
-import { Box, Typography } from '@mui/joy';
+import { Box, Typography } from '@mui/material';
 const cx = classNames.bind(styles);
 
 const DynamicLink = ({

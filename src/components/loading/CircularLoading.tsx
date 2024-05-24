@@ -1,4 +1,4 @@
-import { Box, CircularProgress, styled } from '@mui/joy';
+import { Box, CircularProgress, styled } from '@mui/material';
 
 const DisabledBackground = styled(Box)({
   width: '100%',
