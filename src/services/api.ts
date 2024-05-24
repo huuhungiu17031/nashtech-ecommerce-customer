@@ -1,9 +1,8 @@
 import { getDownloadURL, ref } from "firebase/storage";
-import { autoFetch } from ".";
 import notFoundImage from "@/assets/images/notFoundImg.jpg";
 import { storage } from "../configuration";
-import { BrandVm, ProductCardInterface } from "@/shared";
-
+import { BrandVm, ProductCardInterface, ProductGalleryVm } from "@/shared";
+import { autoFetch } from ".";
 const getProductCardVmsByCategoryId = async (
   categoryId: string | undefined,
   field: string,
@@ -35,7 +34,16 @@ const getProductDetailVm = async (id: string | undefined) => {
 
 const getProductGalleryVmByProductId = async (id: string | undefined) => {
   const response = await autoFetch.get(`product-gallery/${id}`);
-  return response.data;
+  const data = await Promise.all(
+    response.data.map(async (image: ProductGalleryVm) => {
+      const imagePath = await getImageFromFireBase(image.imagePath);
+      return {
+        ...image,
+        imagePath,
+      };
+    })
+  );
+  return data;
 };
 
 const getCategoryVms = async () => {
@@ -65,6 +73,51 @@ const getBrandsByCategoryId = async (categoryId: string | undefined) => {
   return content;
 };
 
+const checkPaymentAndUpdateOrder = async ({
+  vnPayParams,
+  id,
+}: {
+  vnPayParams: any;
+  id: string;
+}) => {
+  const response = await autoFetch.post(`vnPay/${id}`, null, {
+    params: {
+      ...vnPayParams,
+    },
+  });
+  return response;
+};
+
+const getCartDetail = async ({ cartId }: { cartId: number }) => {
+  const response = await autoFetch(`cart-detail/1`);
+  return response.data;
+};
+
+const getProductGalleryInCart = async ({
+  productId,
+}: {
+  productId: number;
+}) => {
+  const response = await autoFetch(`product-gallery/${productId}/cartDetail`);
+  const imagePath = await getImageFromFireBase(response.data.imagePath);
+  return { ...response.data, imagePath };
+};
+
+// mutation
+const addToCart = async ({
+  cartId,
+  id,
+  amount,
+}: {
+  cartId: number;
+  id: number;
+  amount: number;
+}) => {
+  const payload = { id, amount };
+  const response = await autoFetch.post(`cart-detail/${cartId}`, payload);
+  return response.data;
+};
+
 export {
   getProductCardVmsByCategoryId,
   getCategoryVms,
@@ -72,4 +125,8 @@ export {
   getProductDetailVm,
   getProductGalleryVmByProductId,
   getBrandsByCategoryId,
+  getCartDetail,
+  checkPaymentAndUpdateOrder,
+  getProductGalleryInCart,
+  addToCart,
 };

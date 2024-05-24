@@ -1,5 +1,5 @@
 import { DynamicLink } from '@/components';
-import { Box, Typography } from '@mui/joy';
+import { Box, Typography } from '@mui/material';
 const filterItems = [
   {
     children: 'Giá Cao - Thấp',
