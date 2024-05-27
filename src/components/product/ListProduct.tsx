@@ -1,10 +1,10 @@
-import ProductCard from "./ProductCard";
-import styles from "@/globalStyle/styles/list-product.module.scss";
-import classNames from "classnames/bind";
-import { Box, TablePagination } from "@mui/material";
-import { ProductCardInterface } from "@/shared";
-import { useGetProductCardVmsByCategoryId } from "@/services";
-import { CircularLoading } from "../loading";
+import ProductCard from './ProductCard';
+import styles from '@/globalStyle/styles/list-product.module.scss';
+import classNames from 'classnames/bind';
+import { Box, TablePagination } from '@mui/material';
+import { ProductCardInterface } from '@/shared';
+import { useGetProductCardVmsByCategoryId } from '@/services';
+import { CircularLoading } from '../loading';
 const cx = classNames.bind(styles);
 
 const ListProduct = ({
@@ -16,31 +16,28 @@ const ListProduct = ({
   paramsObject: any;
   setSearchParams: any;
 }) => {
-  const handleChangePage = (
-    event: React.MouseEvent<HTMLButtonElement> | null,
-    newPage: number
-  ) => {
-    // setSearchParams({ ...paramsObject, page: newPage.toString() });
-    // setPage(newPage);
+  const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
+    setSearchParams({ ...paramsObject, page: newPage.toString() });
   };
   const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    // setRowsPerPage(parseInt(event.target.value, 10));
-    // setPage(0);
+    setSearchParams({ ...paramsObject, size: event.target.value.toString() });
   };
+  const { order, dir, brandId, page, size } = paramsObject;
   const { isLoading, data } = useGetProductCardVmsByCategoryId(
     id,
-    paramsObject.order || "",
-    paramsObject.dir || "",
-    paramsObject.brandId || ""
-    // paramsObject.page
+    order || '',
+    dir || '',
+    brandId || '',
+    page || '0',
+    size || '10',
   );
   if (isLoading) return <CircularLoading />;
-  const { content, totalElements, size, currentPage } = data;
+  const { content, totalElements, size: responseSize, currentPage } = data;
   return (
     <>
-      <Box className={cx("product-card-wrapper")}>
+      <Box className={cx('product-card-wrapper')}>
         {content.map((product: ProductCardInterface) => (
           <ProductCard key={product.id} data={product} />
         ))}
@@ -50,7 +47,7 @@ const ListProduct = ({
         count={totalElements}
         page={currentPage}
         onPageChange={handleChangePage}
-        rowsPerPage={size}
+        rowsPerPage={responseSize}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
     </>

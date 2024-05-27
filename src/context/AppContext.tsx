@@ -1,54 +1,82 @@
-import { createContext, useContext, useState } from "react";
-import axios from "axios";
-
-// const accessToken = JSON.parse(localStorage.getItem("accessToken") || "");
-// const refreshToken = JSON.parse(localStorage.getItem("refreshToken") || "");
+import { createContext, useContext, useEffect, useState } from 'react';
+import { InternalAxiosRequestConfig } from 'axios';
+import { autoFetch } from '@/services';
+import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
+import useAuthUser from 'react-auth-kit/hooks/useAuthUser';
+import useIsAuthenticated from 'react-auth-kit/hooks/useIsAuthenticated';
 
 export interface AuthStateInterface {
-  accessToken: string;
-  refreshToken: string;
+  accessToken: string | null;
+  refreshToken: string | null;
+  email: string;
+  userId: number;
+  isAuthenticated: boolean;
+}
+interface ContextInterface extends AuthStateInterface {
+  setAuth: (accessToken: string, refreshToken: string) => void;
 }
 
-const initState = {
-  accessToken:
-    "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOIiwiUk9MRV9VU0VSIl0sInN1YiI6ImFhYWFAZ21haWwuY29tIiwiaWF0IjoxNzE2NTI4NjIzLCJleHAiOjE3MTY3MDE0MjN9.__hMCn9_-Bw9aVeSB7nJZf7ctpxcq-oPUsw3RfdyjAM",
-  refreshToken: "",
+const AppContext = createContext<ContextInterface | undefined>(undefined);
+
+const exemptedUrls = ['category', 'product', 'rating'];
+
+const checkMethodAndUrlInterceptor = (config: InternalAxiosRequestConfig) => {
+  if (config.method === 'get' && config.url && exemptedUrls.includes(config.url)) {
+    delete config.headers.Authorization;
+  }
+  return config;
 };
-const { VITE_BASE_URL } = import.meta.env;
-// @ts-ignore
-const AppContext = createContext();
+
+interface UserInfor {
+  email: string;
+  userId: number;
+}
 
 const AppProvider = ({ children }: any) => {
+  const initState = {
+    accessToken: '',
+    refreshToken: '',
+    email: '',
+    userId: 0,
+    isAuthenticated: false,
+  };
   const [state, setStateContext] = useState<AuthStateInterface>(initState);
-  const bearerToken = "Bearer " + state.accessToken;
-  axios.defaults.headers.common["Authorization"] = bearerToken;
-  const authenFetch = axios.create({
-    baseURL: VITE_BASE_URL,
-  });
-
-  // Add a request interceptor
-  authenFetch.interceptors.request.use(
-    function (config) {
-      console.log(config.url, "App context config");
-      // Do something before request is sent
-
-      return config;
-    },
+  const bearerToken = 'Bearer ' + state.accessToken;
+  autoFetch.defaults.headers.common['Authorization'] = bearerToken;
+  autoFetch.interceptors.request.use(
+    config => checkMethodAndUrlInterceptor(config),
     function (error) {
-      // Do something with request error
       return Promise.reject(error);
-    }
+    },
   );
-  // Add a response interceptor
-  authenFetch.interceptors.response.use(
+  const authHeader = useAuthHeader();
+  const auth = useAuthUser<UserInfor>();
+  const isAuthenticated = useIsAuthenticated();
+
+  useEffect(() => {
+    let currentState = { ...state };
+    if (auth) {
+      currentState = { ...currentState, email: auth.email, userId: auth.userId };
+    }
+    if (authHeader) {
+      const accessToken = authHeader.split(' ')[1].toString();
+      currentState = { ...currentState, accessToken };
+    }
+    if (isAuthenticated) {
+      currentState = { ...currentState, isAuthenticated };
+    }
+    setStateContext(currentState);
+  }, [auth, authHeader]);
+
+  const setAuth = (accessToken: string, refreshToken: string) => {
+    setStateContext({ ...state, accessToken, refreshToken });
+  };
+
+  autoFetch.interceptors.response.use(
     function (response) {
-      // Any status code that lie within the range of 2xx cause this function to trigger
-      // Do something with response data
       return response;
     },
     function (error) {
-      // Any status codes that falls outside the range of 2xx cause this function to trigger
-      // Do something with response error
       if (error.response.status === 401) {
       }
       if (error.response.status === 403) {
@@ -56,20 +84,26 @@ const AppProvider = ({ children }: any) => {
       if (error.response.status === 11000) {
       }
       return Promise.reject(error);
-    }
+    },
   );
+
   return (
     <AppContext.Provider
       value={{
         ...state,
-        authenFetch,
-      }}
-    >
+        setAuth,
+      }}>
       {children}
     </AppContext.Provider>
   );
 };
 
-const useAuthen = () => useContext(AppContext);
+const useAuthen = () => {
+  const context = useContext(AppContext);
+  if (context === undefined) {
+    throw new Error('useAuthen must be used within a AppProvider');
+  }
+  return context;
+};
 
 export { useAuthen, AppProvider };

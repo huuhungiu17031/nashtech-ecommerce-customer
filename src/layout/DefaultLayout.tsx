@@ -1,9 +1,9 @@
-import { Banner, Navbar } from "@/components";
-import { Box } from "@mui/material";
-import { Outlet } from "react-router-dom";
+import { Banner, Navbar } from '@/components';
+import { Box } from '@mui/material';
+import { Outlet } from 'react-router-dom';
 const styles = {
   header: {
-    position: "sticky",
+    position: 'sticky',
     top: 0,
     left: 0,
     zIndex: 10,

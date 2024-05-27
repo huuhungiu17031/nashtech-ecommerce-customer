@@ -1,12 +1,12 @@
-import Swal from "sweetalert2";
-const timer = 2000;
+import Swal from 'sweetalert2';
 const errorAlert = (
-  text = "You dont have permission to visit this page!",
-  title = "Permission Denied!",
-  showConfirmButton = true
+  text = 'You dont have permission to visit this page!',
+  title = 'Permission Denied!',
+  showConfirmButton = true,
+  timer = 2000,
 ) => {
   return Swal.fire({
-    icon: "error",
+    icon: 'error',
     title,
     text,
     showConfirmButton,
@@ -15,9 +15,9 @@ const errorAlert = (
   });
 };
 
-const successfullAlert = (title = "Your work has been saved") => {
+const successfullAlert = (title = 'Your work has been saved', timer = 2000) => {
   return Swal.fire({
-    icon: "success",
+    icon: 'success',
     title,
     showConfirmButton: true,
     timer,

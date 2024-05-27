@@ -8,22 +8,18 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
 
 export const Breadcrumb = () => {
   const location = useLocation();
-  console.log(location)
+  console.log(location);
   return (
-    <Box role="presentation" onClick={handleClick} className='container'>
-      <Breadcrumbs aria-label="breadcrumb" sx={{ padding: 1}}>
+    <Box role="presentation" onClick={handleClick} className="container">
+      <Breadcrumbs aria-label="breadcrumb" sx={{ padding: 1 }}>
         <Link underline="hover" color="inherit" href="/">
           MUI
         </Link>
-        <Link
-          underline="hover"
-          color="inherit"
-          href="/material-ui/getting-started/installation/"
-        >
+        <Link underline="hover" color="inherit" href="/material-ui/getting-started/installation/">
           Core
         </Link>
         <Typography color="text.primary">Breadcrumbs</Typography>
       </Breadcrumbs>
     </Box>
   );
-}
+};

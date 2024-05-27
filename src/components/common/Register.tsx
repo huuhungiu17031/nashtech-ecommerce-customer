@@ -1,27 +1,10 @@
-import { FormEvent, useEffect, useState } from 'react';
-import {
-  Avatar,
-  Box,
-  Button,
-  Container,
-  CssBaseline,
-  Grid,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { Avatar, Box, Button, Container, CssBaseline, TextField, Typography } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { FormEvent, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
-import { login } from '@/services';
-import useSignIn from 'react-auth-kit/hooks/useSignIn';
-import useIsAuthenticated from 'react-auth-kit/hooks/useIsAuthenticated';
+import { register } from '@/services';
 import { successfullAlert } from '../alert';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useAuthen } from '@/context';
-
-const initialState = {
-  email: '',
-  password: '',
-};
+import { useNavigate } from 'react-router-dom';
 
 const styles = {
   container: {
@@ -43,45 +26,28 @@ const styles = {
   },
 };
 
-const Login = () => {
-  const signIn = useSignIn();
-  const isAuthenticated = useIsAuthenticated();
-  const { container, avatar, formMargin, submitButton } = styles;
+const initialState = {
+  email: '',
+  password: '',
+};
+
+const Register = () => {
   const [form, setForm] = useState(initialState);
+  const { container, avatar, formMargin, submitButton } = styles;
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    mutationRegister.mutate(form);
+  };
   const navigate = useNavigate();
-  const location = useLocation();
-  const { setAuth } = useAuthen();
-  const mutationLogin = useMutation({
+  const mutationRegister = useMutation({
     mutationFn: async ({ email, password }: { email: string; password: string }) =>
-      await login({ email, password }),
+      await register({ email, password }),
     onSuccess: data => {
-      const { accessToken, type, email, userId, refreshToken } = data;
-      signIn({
-        auth: {
-          token: accessToken,
-          type,
-        },
-        userState: {
-          email,
-          userId,
-        },
-      });
-      setAuth(accessToken, refreshToken);
-      successfullAlert('Login successfully').then(() => {
-        navigate('/', { replace: true, state: { from: location } });
+      successfullAlert(data).then(() => {
+        navigate('/login');
       });
     },
   });
-
-  useEffect(() => {
-    if (isAuthenticated) return navigate('/', { replace: true, state: { from: location } });
-  }, []);
-
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    mutationLogin.mutate(form);
-  };
-
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -90,10 +56,11 @@ const Login = () => {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          Register
         </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={formMargin}>
           <TextField
+            type="email"
             margin="normal"
             required
             fullWidth
@@ -116,17 +83,12 @@ const Login = () => {
             onChange={e => setForm({ ...form, password: e.target.value })}
           />
           <Button type="submit" fullWidth variant="contained" sx={submitButton}>
-            Sign In
+            Sign up
           </Button>
-          <Grid container>
-            <Grid item>
-              <Link to={'/register'}>{"Don't have an account? Sign Up"}</Link>
-            </Grid>
-          </Grid>
         </Box>
       </Box>
     </Container>
   );
 };
 
-export default Login;
+export default Register;
