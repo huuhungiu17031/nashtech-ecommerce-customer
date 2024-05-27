@@ -1,16 +1,17 @@
-export * from "./route.name";
-export * from "./constants";
+export * from './route.name';
+export * from './constants';
+export * from './api-prefix';
 export interface BrandVm {
   id: number;
   name: string;
-  imagePath: string | "";
+  imagePath: string | '';
 }
 
 export interface ProductCardInterface {
   id: number;
   productName: string;
   price: number;
-  thumbnail: string | "";
+  thumbnail: string | '';
 }
 
 export interface ProductGalleryVm {
@@ -39,4 +40,29 @@ export interface VnPayInterface {
   vnp_TxnRef: string;
   vnp_SecureHash: string;
   vnp_BankTranNo?: string; // Optional parameter with default value
+}
+
+export interface CartDetail {
+  amount: number;
+  id: number;
+  productId: number;
+}
+
+export interface CheckOutData {
+  paymentMethod: string;
+  orderDetailVms: OrderDetailVm[];
+}
+
+export interface OrderDetailVm {
+  productId: number;
+  amount: number;
+}
+
+export interface Product {
+  id: number;
+  productName: string;
+  price: number;
+  description: string;
+  amount: number;
+  cartId: number;
 }

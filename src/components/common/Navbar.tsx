@@ -1,16 +1,38 @@
 import { DynamicLink } from '@/components';
 import images from '@/assets/images';
 import { CART } from '@/shared';
-import { Box } from '@mui/material';
-import { Navigate, useNavigate } from 'react-router-dom';
-
+import { Avatar, Box, Menu, MenuItem } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import useIsAuthenticated from 'react-auth-kit/hooks/useIsAuthenticated';
+import useSignOut from 'react-auth-kit/hooks/useSignOut';
+import { useState } from 'react';
+import { autoFetch } from '@/services';
+import { useAuthen } from '@/context';
 const Navbar = () => {
+  const isAuthenticated = useIsAuthenticated();
+  const { email } = useAuthen();
   const navigate = useNavigate();
-  const openModalLocation = () => {
-
-  };
   const openModalLogin = () => {
-    navigate("/login")
+    navigate('/login');
+  };
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const signOut = useSignOut();
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const handleLogout = async () => {
+    try {
+      setAnchorEl(null);
+      await autoFetch.post('user/logout');
+      signOut();
+      window.location.reload();
+    } catch (error) {
+      console.log('ERROR LOGOUT');
+    }
   };
   return (
     <Box
@@ -32,7 +54,6 @@ const Navbar = () => {
         <DynamicLink icon={'faTableList'}>Danh mục</DynamicLink>
 
         <DynamicLink
-          onClick={openModalLocation}
           icon={'faLocationDot'}
           subIcon={'faChevronDown'}
           locationValue={'Ho Chi Minh'}
@@ -60,10 +81,40 @@ const Navbar = () => {
         <DynamicLink icon={'faBagShopping'} width={25} height={25} hover to={CART}>
           Giỏ <br /> hàng
         </DynamicLink>
-
-        <DynamicLink icon={'faUser'} smember onClick={openModalLogin}>
-          Smember
-        </DynamicLink>
+        {isAuthenticated ? (
+          <div>
+            <Box
+              id="demo-positioned-button"
+              aria-controls={open ? 'demo-positioned-menu' : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? 'true' : undefined}
+              onClick={handleClick}>
+              <Avatar>{email[0]}</Avatar>
+            </Box>
+            <Menu
+              id="demo-positioned-menu"
+              aria-labelledby="demo-positioned-button"
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+              }}>
+              <MenuItem>Profile</MenuItem>
+              <MenuItem>My account</MenuItem>
+              <MenuItem onClick={handleLogout}>Logout</MenuItem>
+            </Menu>
+          </div>
+        ) : (
+          <DynamicLink icon={'faUser'} smember onClick={openModalLogin}>
+            Smember
+          </DynamicLink>
+        )}
       </Box>
     </Box>
   );

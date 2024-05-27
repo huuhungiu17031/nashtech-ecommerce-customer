@@ -1,2 +1,1 @@
-export * from './fetchData';
-export * from './clearState';
+export * from "./clearState";

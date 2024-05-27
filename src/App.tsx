@@ -1,13 +1,8 @@
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
-import {
-  HomePage,
-  Login,
-  ShoppingCart,
-  CategoryPage,
-  ProductDetail,
-} from "./components";
-import { CART, LOGIN } from "./shared";
-import { Checkout, DefaultLayout, RequireAuthenLayout } from "./layout";
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import { HomePage, Login, ShoppingCart, CategoryPage, ProductDetail, Register } from './components';
+import { CART, LOGIN } from './shared';
+import { Checkout, DefaultLayout } from './layout';
+import AuthOutlet from '@auth-kit/react-router/AuthOutlet';
 
 function App() {
   return (
@@ -18,7 +13,8 @@ function App() {
           <Route path="category/:id" element={<CategoryPage />} />
           <Route path="product/:id" element={<ProductDetail />} />
           <Route path={LOGIN} element={<Login />} />
-          <Route element={<RequireAuthenLayout />}>
+          <Route path={'/register'} element={<Register />} />
+          <Route element={<AuthOutlet fallbackPath={LOGIN} />}>
             <Route path={CART} element={<ShoppingCart />} />
             <Route path="checkout/:id" element={<Checkout />} />
           </Route>
