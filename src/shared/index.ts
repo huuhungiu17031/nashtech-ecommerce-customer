@@ -1,6 +1,7 @@
 export * from './route.name';
 export * from './constants';
 export * from './api-prefix';
+export * from './queryKey';
 export interface BrandVm {
   id: number;
   name: string;

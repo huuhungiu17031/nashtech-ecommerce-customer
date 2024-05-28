@@ -1,10 +1,19 @@
-import { Avatar, Box, Button, Container, CssBaseline, TextField, Typography } from '@mui/material';
+import {
+  Avatar,
+  Box,
+  Button,
+  Container,
+  CssBaseline,
+  Grid,
+  TextField,
+  Typography,
+} from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { FormEvent, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { register } from '@/services';
 import { successfullAlert } from '../alert';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const styles = {
   container: {
@@ -85,6 +94,11 @@ const Register = () => {
           <Button type="submit" fullWidth variant="contained" sx={submitButton}>
             Sign up
           </Button>
+          <Grid container>
+            <Grid item>
+              <Link to={'/login'}>{"You've already had account. Login"}</Link>
+            </Grid>
+          </Grid>
         </Box>
       </Box>
     </Container>

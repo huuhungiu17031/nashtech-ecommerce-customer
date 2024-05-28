@@ -1,25 +1,13 @@
-import { Box, Rating, Typography } from '@mui/material';
+import { Box, Button, Rating, TextField, Typography } from '@mui/material';
 import { BoxWrapper } from '../common';
 import { FormEvent, useState } from 'react';
 import StarIcon from '@mui/icons-material/Star';
 import { RatingBox } from './RatingBox';
-
-const labels: { [index: string]: string } = {
-  0.5: 'Useless',
-  1: 'Useless+',
-  1.5: 'Poor',
-  2: 'Poor+',
-  2.5: 'Ok',
-  3: 'Ok+',
-  3.5: 'Good',
-  4: 'Good+',
-  4.5: 'Excellent',
-  5: 'Excellent+',
-};
-
-function getLabelText(value: number) {
-  return `${value} Star${value !== 1 ? 's' : ''}, ${labels[value]}`;
-}
+import { successfullAlert } from '../alert';
+import { useNavigate } from 'react-router-dom';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { createRatingAndComment } from '@/services';
+import { QUERY_KEYS } from '@/shared';
 
 interface UserRating {
   comment: string;
@@ -28,20 +16,61 @@ interface UserRating {
   createdBy: string;
 }
 
+export interface Rating {
+  score: number | null;
+  comment: string;
+}
+
+export interface RatingPayload extends Rating {
+  productId: number;
+}
+
+const initialState: Rating = {
+  score: 4,
+  comment: '',
+};
+
 export const RatingProduct = ({
   productName,
   isAuthenticated = false,
   userRating,
+  productId,
 }: {
   productName: string;
   isAuthenticated: boolean;
   userRating: UserRating[];
+  productId: number;
 }) => {
-  const [value, setValue] = useState<number | null>(4);
+  const [formRating, setFormRating] = useState(initialState);
+  const queryClient = useQueryClient();
+
   const handleSubmitRating = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(value);
+    const payload = {
+      productId,
+      ...formRating,
+    };
+    mutationCommentAndRating.mutate(payload);
   };
+
+  const mutationCommentAndRating = useMutation({
+    mutationFn: (payload: RatingPayload) => createRatingAndComment(payload),
+    onSuccess: data => {
+      successfullAlert(data).then(() =>
+        queryClient
+          .invalidateQueries({
+            queryKey: [QUERY_KEYS.useGetRatingFromUser, productId],
+          })
+          .then(() => {
+            queryClient.invalidateQueries({
+              queryKey: [QUERY_KEYS.useGetAverageRating, productId],
+            });
+          }),
+      );
+    },
+  });
+
+  const navigate = useNavigate();
   return (
     <BoxWrapper>
       <Box sx={{ padding: 1 }}>
@@ -51,31 +80,50 @@ export const RatingProduct = ({
             fontSize: '1rem',
             fontWeight: 'bold',
           }}>{`Đánh giá & nhận xét ${productName}`}</Typography>
+        {!isAuthenticated && (
+          <Button
+            variant="contained"
+            onClick={() => {
+              if (!isAuthenticated) {
+                successfullAlert('You need to login').then(() => {
+                  navigate('/login');
+                });
+              }
+            }}>
+            Đánh giá
+          </Button>
+        )}
         {isAuthenticated && (
           <>
-            <Box
-              sx={{
-                width: 200,
-                display: 'flex',
-                alignItems: 'center',
-              }}>
-              <Box component="form" onSubmit={handleSubmitRating} noValidate>
+            <Box>
+              <form onSubmit={handleSubmitRating} noValidate>
                 <Rating
                   name="hover-feedback"
-                  value={value}
+                  value={formRating.score}
                   precision={0.5}
-                  getLabelText={getLabelText}
                   size="large"
-                  onChange={(_, newValue) => setValue(newValue)}
+                  onChange={(_, newScore) => setFormRating({ ...formRating, score: newScore })}
                   emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
                 />
-                <button type="submit">SUBMIT</button>
-              </Box>
+                <Box></Box>
+                <TextField
+                  id="outlined-textarea"
+                  label="Comment"
+                  placeholder="Placeholder"
+                  multiline
+                  sx={{ width: '100%' }}
+                  onChange={e => setFormRating({ ...formRating, comment: e.target.value })}
+                />
+                <Box></Box>
+                <Button variant="contained" type="submit" sx={{ mt: 1 }}>
+                  SUBMIT
+                </Button>
+              </form>
             </Box>
           </>
         )}
       </Box>
-      {userRating &&
+      {userRating && userRating.length > 0 ? (
         userRating.map((item: UserRating, index: number) => {
           return (
             <RatingBox
@@ -85,7 +133,12 @@ export const RatingProduct = ({
               email={item.createdBy}
             />
           );
-        })}
+        })
+      ) : (
+        <Typography component={'div'} textAlign={'center'} padding={2}>
+          No comments for this product
+        </Typography>
+      )}
     </BoxWrapper>
   );
 };

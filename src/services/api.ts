@@ -12,6 +12,7 @@ import {
   VN_PAY,
 } from '@/shared';
 import { autoFetch } from '.';
+import { RatingPayload } from '@/components/product/RatingProduct';
 
 const getProductCardVmsByCategoryId = async (
   categoryId: string | undefined,
@@ -131,6 +132,16 @@ const getRatingFromUser = async (productId: number) => {
   return response.data;
 };
 
+const getRatingAverage = async (productId: number) => {
+  const response = await autoFetch(`rating/average/${productId}`);
+  return response.data;
+};
+
+const createRatingAndComment = async (payload: RatingPayload) => {
+  const response = await autoFetch.post(`rating`, payload);
+  return response.data;
+};
+
 const checkout = async (data: any) => {
   const response = await autoFetch.post(ORDER, data);
   const orderId = response.data;
@@ -173,10 +184,12 @@ export {
   getProductGalleryInCart,
   getCartByUserEmail,
   getRatingFromUser,
+  getRatingAverage,
   // mutation
   addToCart,
   checkout,
   deleteCartDetailById,
   login,
   register,
+  createRatingAndComment,
 };

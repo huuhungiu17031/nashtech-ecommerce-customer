@@ -1,15 +1,16 @@
 import {
+  useGetAverageRating,
   useGetProductDetail,
   useGetProductGalleryVmByProductId,
   useGetRatingFromUser,
 } from '@/services';
-import { Box, Typography } from '@mui/material';
+import { Box, Rating, Typography } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import { CircularLoading } from '../loading';
 import { useState } from 'react';
 import { useClear } from '@/hook';
 import { ProductPrice } from './ProductPrice';
-import { Rating } from './Rating';
+// import { Rating } from './Rating';
 import { CarouselForProductDetail } from './CarouselForProductDetail';
 import { ProductDescription } from './ProductDescription';
 import { RatingProduct } from './RatingProduct';
@@ -39,25 +40,25 @@ const styles = {
 const ProductDetail = () => {
   const { title, divider, gridContainer } = styles;
   const { id } = useParams();
-
+  const productId = parseInt(id || '0', 10);
   // @ts-ignore
   const { isLoading: isLoadingProduct, data: productDetail } = useGetProductDetail(id);
   const { isLoading: isLoadingImage, data: imageUrlList } = useGetProductGalleryVmByProductId(id);
-  const { data: userRating } = useGetRatingFromUser(parseInt(id, 10));
-
+  const { data: userRating } = useGetRatingFromUser(productId);
+  const { isLoading: isLoadingAverage, data: averageRating } = useGetAverageRating(productId);
   const [overflow, setOverFlow] = useState(true);
   useClear(() => {
     setOverFlow(true);
   });
   const isAuthenticated = useIsAuthenticated();
-  if (isLoadingProduct && isLoadingImage) return <CircularLoading />;
+  if (isLoadingProduct && isLoadingImage && isLoadingAverage) return <CircularLoading />;
   if (productDetail && imageUrlList) {
     const { productName, price, description, id } = productDetail;
     return (
       <Box>
         <Box sx={{ display: 'flex' }}>
           <Typography sx={title}>{productName}</Typography>
-          <Rating count={5} />
+          <Rating name="read-only" value={averageRating} readOnly />
         </Box>
         <hr style={divider} />
         <Box sx={gridContainer}>
@@ -73,6 +74,7 @@ const ProductDetail = () => {
             productName={productName}
             isAuthenticated={isAuthenticated}
             userRating={userRating}
+            productId={id}
           />
         </Box>
       </Box>

@@ -4,7 +4,7 @@ import { Box, Grid, IconButton, Typography } from '@mui/material';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { IconComponent } from '../partial';
 import { useAuthen } from '@/context';
-import { Product } from '@/shared';
+import { Product, QUERY_KEYS } from '@/shared';
 const styles = {
   priceText: {
     color: '#d70018',
@@ -33,7 +33,7 @@ export const ProductCart = ({ cartDetail }: { cartDetail: Product }) => {
     mutationFn: async (cartDetailId: number) => deleteCartDetailById(cartDetailId),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['useGetCartDetailByCartId', email],
+        queryKey: [QUERY_KEYS.useGetCartDetailByCartId, email],
       });
     },
   });

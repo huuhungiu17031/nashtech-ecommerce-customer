@@ -7,8 +7,8 @@ import {
   ListItemText,
   Typography,
 } from '@mui/material';
-import { deepOrange } from '@mui/material/colors';
 import { Rating } from './Rating';
+import { getRandomColor } from '@/utils';
 
 export const RatingBox = ({
   score,
@@ -19,11 +19,12 @@ export const RatingBox = ({
   comment: string;
   email: string;
 }) => {
+  const bgcolor = getRandomColor();
   return (
     <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
       <ListItem alignItems="flex-start">
         <ListItemAvatar>
-          <Avatar sx={{ bgcolor: deepOrange[500] }}>{email[0]}</Avatar>
+          <Avatar sx={{ bgcolor }}>{email[0]}</Avatar>
         </ListItemAvatar>
         <ListItemText
           primary={email}
