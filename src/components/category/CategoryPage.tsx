@@ -11,7 +11,10 @@ const CategoryPage = () => {
     page: '0',
     size: '10',
   });
+
   const paramsObject = Object.fromEntries(searchParams.entries());
+
+  console.log(paramsObject);
   return (
     <Box>
       <Brand id={id} setSearchParams={setSearchParams} paramsObject={paramsObject} />

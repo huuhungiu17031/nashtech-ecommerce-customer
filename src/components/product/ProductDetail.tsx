@@ -73,7 +73,7 @@ const ProductDetail = () => {
           <RatingProduct
             productName={productName}
             isAuthenticated={isAuthenticated}
-            userRating={userRating}
+            userRating={userRating.content}
             productId={id}
           />
         </Box>

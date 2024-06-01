@@ -25,6 +25,7 @@ import {
   faShieldAlt,
   faShieldHalved,
   faTrash,
+  faFire,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -54,6 +55,7 @@ const iconMap: any = {
   faCartPlus,
   faShieldHalved,
   faTrash,
+  faFire,
 };
 
 export const IconComponent = ({ iconName, style }: any) => {

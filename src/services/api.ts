@@ -6,6 +6,7 @@ import {
   CART,
   CART_DETAIL,
   CartDetail,
+  CheckOutData,
   ORDER,
   ProductCardInterface,
   ProductGalleryVm,
@@ -142,10 +143,10 @@ const createRatingAndComment = async (payload: RatingPayload) => {
   return response.data;
 };
 
-const checkout = async (data: any) => {
+const checkout = async (data: CheckOutData) => {
   const response = await autoFetch.post(ORDER, data);
   const orderId = response.data;
-  const vnPay = await autoFetch.get(VN_PAY, {
+  const vnPay = await autoFetch.post(VN_PAY, null, {
     params: { orderId },
   });
   return vnPay.data;

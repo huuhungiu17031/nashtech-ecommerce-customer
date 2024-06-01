@@ -3,12 +3,10 @@ import {
   List,
   ListItem,
   ListItemAvatar,
-  ListItemIcon,
   ListItemText,
   Typography,
+  Rating,
 } from '@mui/material';
-import { Rating } from './Rating';
-import { getRandomColor } from '@/utils';
 
 export const RatingBox = ({
   score,
@@ -19,30 +17,30 @@ export const RatingBox = ({
   comment: string;
   email: string;
 }) => {
-  const bgcolor = getRandomColor();
   return (
     <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
       <ListItem alignItems="flex-start">
         <ListItemAvatar>
-          <Avatar sx={{ bgcolor }}>{email[0]}</Avatar>
+          <Avatar>{email[0]}</Avatar>
         </ListItemAvatar>
         <ListItemText
           primary={email}
           secondary={
             <>
-              <Typography
-                sx={{ display: 'inline' }}
-                component="span"
-                variant="body2"
-                color="text.primary">
+              <Rating
+                size="small"
+                name="half-rating"
+                defaultValue={score}
+                precision={0.5}
+                readOnly
+              />
+
+              <Typography component="div" variant="body2" color="text.primary">
                 {comment}
               </Typography>
             </>
           }
         />
-        <ListItemIcon>
-          <Rating count={score} />
-        </ListItemIcon>
       </ListItem>
     </List>
   );

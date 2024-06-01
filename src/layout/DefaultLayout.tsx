@@ -1,6 +1,6 @@
 import { Banner, Navbar } from '@/components';
 import { Box } from '@mui/material';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 const styles = {
   header: {
     position: 'sticky',
@@ -9,6 +9,7 @@ const styles = {
     zIndex: 10,
   },
 };
+
 const DefaultLayout = () => {
   return (
     <Box>
