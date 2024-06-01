@@ -1,5 +1,13 @@
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import { HomePage, Login, ShoppingCart, CategoryPage, ProductDetail, Register } from './components';
+import {
+  HomePage,
+  Login,
+  ShoppingCart,
+  CategoryPage,
+  ProductDetail,
+  Register,
+  ErrorPage,
+} from './components';
 import { CART, LOGIN } from './shared';
 import { Checkout, DefaultLayout } from './layout';
 import AuthOutlet from '@auth-kit/react-router/AuthOutlet';
@@ -18,6 +26,7 @@ function App() {
             <Route path={CART} element={<ShoppingCart />} />
             <Route path="checkout/:id" element={<Checkout />} />
           </Route>
+          <Route path={'*'} element={<ErrorPage />} />
         </Route>
       </Routes>
     </Router>

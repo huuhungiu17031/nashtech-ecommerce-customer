@@ -55,6 +55,7 @@ const ShoppingCart = () => {
     isLoading,
     isSuccess: isSuccessCardDetail,
   } = useGetCartDetailByCartId(email);
+
   const handleCheckOut = async () => {
     if (cartDetails) {
       const orderDetailVms = cartDetails.map((item: Product) => {
@@ -93,7 +94,7 @@ const ShoppingCart = () => {
         </Box>
         {cartDetails && cartDetails.length > 0 ? (
           <Grid container spacing={2}>
-            <Grid item xs={8}>
+            <Grid item xs={7}>
               <Box sx={shoppingCartWrapper}>
                 {cartDetails.map((item: Product) => (
                   <ProductCart key={item.cartId} cartDetail={item} />
@@ -103,7 +104,7 @@ const ShoppingCart = () => {
                 </Button>
               </Box>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={5}>
               <Box sx={shoppingCartWrapper}>
                 <Box sx={total}>Total: {formatPrice({ price: totalMoney })}</Box>
               </Box>

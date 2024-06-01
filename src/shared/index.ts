@@ -13,6 +13,7 @@ export interface ProductCardInterface {
   productName: string;
   price: number;
   thumbnail: string | '';
+  isFeatured: boolean;
 }
 
 export interface ProductGalleryVm {

@@ -1,6 +1,6 @@
 import { deleteCartDetailById, useGetProductGalleryInCart } from '@/services';
 import { formatPrice } from '@/utils';
-import { Box, Grid, IconButton, Typography } from '@mui/material';
+import { Box, Divider, Grid, IconButton, Typography } from '@mui/material';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { IconComponent } from '../partial';
 import { useAuthen } from '@/context';
@@ -10,13 +10,11 @@ const styles = {
     color: '#d70018',
     display: 'inline-block',
     fontSize: '18px',
-    fontWeight: 700,
     lineHeight: 1.1,
     marginTop: '1rem',
   },
   cart: {
     backgroundColor: 'white',
-    padding: 1,
     borderRadius: 1,
     marginTop: 2,
     border: '1px solid rgb(229,232,234)',
@@ -43,8 +41,7 @@ export const ProductCart = ({ cartDetail }: { cartDetail: Product }) => {
     return (
       <Box sx={cart}>
         <Box sx={{ padding: 1 }}>
-          <Grid container spacing={2}>
-            <Grid item xs={1}></Grid>
+          <Grid container spacing={4}>
             <Grid item xs={2}>
               <img src={imagePath} alt="" width={'100%'} />
             </Grid>
@@ -59,7 +56,7 @@ export const ProductCart = ({ cartDetail }: { cartDetail: Product }) => {
             <Grid item xs={2}>
               {amount}
             </Grid>
-            <Grid item xs={1}>
+            <Grid item xs={2}>
               <IconButton
                 aria-label="delete"
                 onClick={() => mutationDeleteCartDetail.mutate(cartId)}>
@@ -67,6 +64,7 @@ export const ProductCart = ({ cartDetail }: { cartDetail: Product }) => {
               </IconButton>
             </Grid>
           </Grid>
+          <Divider sx={{ marginTop: 2, marginX: 1 }} />
           <Grid container spacing={2}>
             <Grid item xs={1}></Grid>
             <Grid item xs={11}>

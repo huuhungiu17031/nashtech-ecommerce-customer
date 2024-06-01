@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material';
-import { DynamicLink } from '../partial';
+import { DynamicLink, IconComponent } from '../partial';
 import { formatPrice } from '@/utils';
 import { ProductCardInterface } from '@/shared';
 
@@ -18,10 +18,11 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 1,
+    minHeight: '',
   },
   productImage: {
     paddingTop: '0.625rem',
-    width: '100%',
+    width: '80%',
     height: '10rem',
   },
   productTitleBox: {
@@ -45,6 +46,7 @@ const styles = {
     fontFamily: 700,
     lineHeight: 1.4,
     marginBottom: '5px',
+    marginTop: 2,
   },
   priceText: {
     color: '#d70018',
@@ -56,10 +58,19 @@ const styles = {
 };
 
 const ProductCard = ({ data }: { data: ProductCardInterface }) => {
-  const { productName, price, id, thumbnail } = data;
+  console.log(data);
+  const { productName, price, id, thumbnail, isFeatured } = data;
   return (
     <DynamicLink to={`/product/${id}`} style={{ width: '100%' }}>
       <Box sx={styles.productCardWrapper}>
+        <Box sx={{ position: 'absolute' }}>
+          {isFeatured && (
+            <IconComponent
+              iconName={'faFire'}
+              style={{ color: 'red', fontSize: 20, marginRight: 3 }}
+            />
+          )}
+        </Box>
         <Box sx={styles.imageBox}>
           <Box component="img" src={thumbnail} alt="Product Thumbnail" sx={styles.productImage} />
         </Box>
