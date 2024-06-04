@@ -1,9 +1,9 @@
-import { errorAlert, successfullAlert } from '@/components';
-import { autoFetch } from '@/services';
-import { CANCELLED, COMPLETED } from '@/shared';
-import { useEffect } from 'react';
+import { CircularLoading, errorAlert, successfullAlert } from "@/components";
+import { autoFetch } from "@/services";
+import { CANCELLED, COMPLETED } from "@/shared";
+import { useEffect } from "react";
 
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 const Checkout = () => {
   const location = useLocation();
@@ -18,11 +18,11 @@ const Checkout = () => {
       },
     });
     if (response.data.status === COMPLETED) {
-      successfullAlert('Pay successfully').then(() => {
+      successfullAlert("Pay successfully").then(() => {
         navigate(`/`, { replace: true });
       });
     } else if (response.data.status === CANCELLED) {
-      errorAlert('Pay Failed', 'Order was cancelled', true);
+      errorAlert("Pay Failed", "Order was cancelled", true);
     }
   };
 
@@ -30,7 +30,7 @@ const Checkout = () => {
     if (queryParams.size > 0) checkout();
   }, []);
 
-  return <div></div>;
+  return <CircularLoading />;
 };
 
 export default Checkout;

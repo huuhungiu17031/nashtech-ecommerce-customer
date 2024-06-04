@@ -78,6 +78,7 @@ const Login = () => {
       });
     },
     onError: (error: AxiosError) => {
+      console.log(error);
       errorAlert(error.response?.data.detail);
     },
   });

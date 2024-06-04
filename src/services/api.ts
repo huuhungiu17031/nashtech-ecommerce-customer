@@ -71,7 +71,6 @@ const getImageFromFireBase = async (path: string) => {
     const imageUrl = await getDownloadURL(ref(storage, path));
     return imageUrl;
   } catch (error) {
-    console.log(error);
     return notFoundImage;
   }
 };

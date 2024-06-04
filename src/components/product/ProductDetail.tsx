@@ -10,7 +10,6 @@ import { CircularLoading } from "../loading";
 import { useState } from "react";
 import { useClear } from "@/hook";
 import { ProductPrice } from "./ProductPrice";
-// import { Rating } from './Rating';
 import { CarouselForProductDetail } from "./CarouselForProductDetail";
 import { ProductDescription } from "./ProductDescription";
 import { RatingProduct } from "./RatingProduct";
@@ -56,7 +55,6 @@ const ProductDetail = () => {
   const isAuthenticated = useIsAuthenticated();
   if (isLoadingProduct && isLoadingImage && isLoadingAverage)
     return <CircularLoading />;
-  console.log(imageUrlList);
   if (productDetail && imageUrlList) {
     const { productName, price, description, id } = productDetail;
     return (
