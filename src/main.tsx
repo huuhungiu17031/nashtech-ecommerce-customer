@@ -8,7 +8,7 @@ const queryClient = new QueryClient();
 import createStore from 'react-auth-kit/createStore';
 
 const store = createStore({
-  authName: '_auth',
+  authName: '_authCustomer',
   authType: 'cookie',
   cookieDomain: window.location.hostname,
   cookieSecure: false,

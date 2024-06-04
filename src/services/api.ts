@@ -1,6 +1,6 @@
-import { getDownloadURL, ref } from 'firebase/storage';
-import notFoundImage from '@/assets/images/notFoundImg.jpg';
-import { storage } from '../configuration';
+import { getDownloadURL, ref } from "firebase/storage";
+import notFoundImage from "@/assets/images/notFoundImg.jpg";
+import { storage } from "../configuration";
 import {
   BrandVm,
   CART,
@@ -11,9 +11,9 @@ import {
   ProductCardInterface,
   ProductGalleryVm,
   VN_PAY,
-} from '@/shared';
-import { autoFetch } from '.';
-import { RatingPayload } from '@/components/product/RatingProduct';
+} from "@/shared";
+import { autoFetch } from ".";
+import { RatingPayload } from "@/components/product/RatingProduct";
 
 const getProductCardVmsByCategoryId = async (
   categoryId: string | undefined,
@@ -21,7 +21,7 @@ const getProductCardVmsByCategoryId = async (
   dir: string,
   brandId: string,
   page: string,
-  size: string,
+  size: string
 ) => {
   const response = await autoFetch.get(`product/${categoryId}`, {
     params: {
@@ -39,7 +39,7 @@ const getProductCardVmsByCategoryId = async (
         ...product,
         thumbnail,
       };
-    }),
+    })
   );
   return { ...response.data, content };
 };
@@ -57,13 +57,13 @@ const getProductGalleryVmByProductId = async (id: string | undefined) => {
         ...image,
         imagePath,
       };
-    }),
+    })
   );
   return data;
 };
 
 const getCategoryVms = async () => {
-  return (await autoFetch.get('category')).data;
+  return (await autoFetch.get("category")).data;
 };
 
 const getImageFromFireBase = async (path: string) => {
@@ -71,6 +71,7 @@ const getImageFromFireBase = async (path: string) => {
     const imageUrl = await getDownloadURL(ref(storage, path));
     return imageUrl;
   } catch (error) {
+    console.log(error);
     return notFoundImage;
   }
 };
@@ -84,7 +85,7 @@ const getBrandsByCategoryId = async (categoryId: string | undefined) => {
         ...brand,
         imagePath,
       };
-    }),
+    })
   );
   return content;
 };
@@ -110,14 +111,20 @@ const getCartDetail = async ({ email }: { email: string }) => {
 
   const newData = await Promise.all(
     [...response].map(async (item: CartDetail) => {
-      const productDetail = await autoFetch.get(`product/product-detail/${item.productId}`);
+      const productDetail = await autoFetch.get(
+        `product/product-detail/${item.productId}`
+      );
       return { ...productDetail.data, amount: item.amount, cartId: item.id };
-    }),
+    })
   );
   return newData;
 };
 
-const getProductGalleryInCart = async ({ productId }: { productId: number }) => {
+const getProductGalleryInCart = async ({
+  productId,
+}: {
+  productId: number;
+}) => {
   const response = await autoFetch(`product-gallery/${productId}/cartDetail`);
   const imagePath = await getImageFromFireBase(response.data.imagePath);
   return { ...response.data, imagePath };
@@ -152,7 +159,13 @@ const checkout = async (data: CheckOutData) => {
   return vnPay.data;
 };
 
-const addToCart = async ({ productId, amount }: { productId: number; amount: number }) => {
+const addToCart = async ({
+  productId,
+  amount,
+}: {
+  productId: number;
+  amount: number;
+}) => {
   const payload = { productId, amount };
   const response = await autoFetch.post(CART, payload);
   return response.data;
@@ -163,12 +176,24 @@ const deleteCartDetailById = async (cartDetailId: number) => {
   return response.data;
 };
 
-const login = async ({ email, password }: { email: string; password: string }) => {
+const login = async ({
+  email,
+  password,
+}: {
+  email: string;
+  password: string;
+}) => {
   const response = await autoFetch.post(`user/login`, { email, password });
   return response.data;
 };
 
-const register = async ({ email, password }: { email: string; password: string }) => {
+const register = async ({
+  email,
+  password,
+}: {
+  email: string;
+  password: string;
+}) => {
   const response = await autoFetch.post(`user/register`, { email, password });
   return response.data;
 };

@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState } from "react";
 import {
   Avatar,
   Box,
@@ -8,31 +8,32 @@ import {
   Grid,
   TextField,
   Typography,
-} from '@mui/material';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { useMutation } from '@tanstack/react-query';
-import { login } from '@/services';
-import useSignIn from 'react-auth-kit/hooks/useSignIn';
-import useIsAuthenticated from 'react-auth-kit/hooks/useIsAuthenticated';
-import { successfullAlert } from '../alert';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useAuthen } from '@/context';
+} from "@mui/material";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import { useMutation } from "@tanstack/react-query";
+import { login } from "@/services";
+import useSignIn from "react-auth-kit/hooks/useSignIn";
+import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated";
+import { errorAlert, successfullAlert } from "../alert";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useAuthen } from "@/context";
+import { AxiosError } from "axios";
 
 const initialState = {
-  email: '',
-  password: '',
+  email: "",
+  password: "",
 };
 
 const styles = {
   container: {
     marginTop: 8,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
   },
   avatar: {
     m: 1,
-    bgcolor: 'secondary.main',
+    bgcolor: "secondary.main",
   },
   formMargin: {
     mt: 1,
@@ -52,9 +53,14 @@ const Login = () => {
   const location = useLocation();
   const { setAuth } = useAuthen();
   const mutationLogin = useMutation({
-    mutationFn: async ({ email, password }: { email: string; password: string }) =>
-      await login({ email, password }),
-    onSuccess: data => {
+    mutationFn: async ({
+      email,
+      password,
+    }: {
+      email: string;
+      password: string;
+    }) => await login({ email, password }),
+    onSuccess: (data) => {
       const { accessToken, type, email, userId, refreshToken } = data;
       signIn({
         auth: {
@@ -67,14 +73,18 @@ const Login = () => {
         },
       });
       setAuth(accessToken, refreshToken);
-      successfullAlert('Login successfully').then(() => {
-        navigate('/', { replace: true, state: { from: location } });
+      successfullAlert("Login successfully").then(() => {
+        navigate("/", { replace: true, state: { from: location } });
       });
+    },
+    onError: (error: AxiosError) => {
+      errorAlert(error.response?.data.detail);
     },
   });
 
   useEffect(() => {
-    if (isAuthenticated) return navigate('/', { replace: true, state: { from: location } });
+    if (isAuthenticated)
+      return navigate("/", { replace: true, state: { from: location } });
   }, []);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -92,7 +102,12 @@ const Login = () => {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={formMargin}>
+        <Box
+          component="form"
+          onSubmit={handleSubmit}
+          noValidate
+          sx={formMargin}
+        >
           <TextField
             margin="normal"
             required
@@ -102,7 +117,7 @@ const Login = () => {
             name="email"
             autoComplete="email"
             autoFocus
-            onChange={e => setForm({ ...form, email: e.target.value })}
+            onChange={(e) => setForm({ ...form, email: e.target.value })}
           />
           <TextField
             margin="normal"
@@ -113,14 +128,14 @@ const Login = () => {
             type="password"
             id="password"
             autoComplete="current-password"
-            onChange={e => setForm({ ...form, password: e.target.value })}
+            onChange={(e) => setForm({ ...form, password: e.target.value })}
           />
           <Button type="submit" fullWidth variant="contained" sx={submitButton}>
             Sign In
           </Button>
           <Grid container>
             <Grid item>
-              <Link to={'/register'}>{"Don't have an account? Sign Up"}</Link>
+              <Link to={"/register"}>{"Don't have an account? Sign Up"}</Link>
             </Grid>
           </Grid>
         </Box>

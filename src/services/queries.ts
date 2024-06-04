@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from "@tanstack/react-query";
 import {
   getBrandsByCategoryId,
   getCartByUserEmail,
@@ -10,8 +10,8 @@ import {
   getProductGalleryVmByProductId,
   getRatingAverage,
   getRatingFromUser,
-} from './api';
-import { QUERY_KEYS } from '@/shared';
+} from "./api";
+import { QUERY_KEYS } from "@/shared";
 
 export function useGetCategoryVms() {
   return useQuery({
@@ -28,7 +28,9 @@ export function useGetProductDetail(productId: number | undefined) {
   });
 }
 
-export function useGetProductGalleryVmByProductId(productId: string | undefined) {
+export function useGetProductGalleryVmByProductId(
+  productId: string | undefined
+) {
   return useQuery({
     queryKey: [QUERY_KEYS.getProductGalleryVm, productId],
     queryFn: () => getProductGalleryVmByProductId(productId),
@@ -41,11 +43,22 @@ export function useGetProductCardVmsByCategoryId(
   dir: string,
   brandId: string,
   page: string,
-  size: string,
+  size: string
 ) {
   return useQuery({
-    queryKey: [QUERY_KEYS.getProductCardVms, { field, dir, brandId, page, size }],
-    queryFn: () => getProductCardVmsByCategoryId(categoryId, field, dir, brandId, page, size),
+    queryKey: [
+      QUERY_KEYS.getProductCardVms,
+      { field, dir, brandId, page, size },
+    ],
+    queryFn: () =>
+      getProductCardVmsByCategoryId(
+        categoryId,
+        field,
+        dir,
+        brandId,
+        page,
+        size
+      ),
   });
 }
 
