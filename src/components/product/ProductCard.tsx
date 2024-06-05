@@ -23,7 +23,7 @@ const styles = {
   },
   productImage: {
     paddingTop: "0.625rem",
-    width: "80%",
+    width: "100%",
     height: "10rem",
   },
   productTitleBox: {

@@ -23,6 +23,7 @@ const Checkout = () => {
       });
     } else if (response.data.status === CANCELLED) {
       errorAlert("Pay Failed", "Order was cancelled", true);
+      navigate(`/`, { replace: true });
     }
   };
 
