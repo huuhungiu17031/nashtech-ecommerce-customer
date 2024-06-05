@@ -1,13 +1,12 @@
-import { autoFetch } from '@/services';
-import createRefresh from 'react-auth-kit/createRefresh';
+import { autoFetch } from "@/services";
+import createRefresh from "react-auth-kit/createRefresh";
 export const refresh = createRefresh({
   interval: 48 * 60 * 60 * 1000,
   refreshApiCallback: async (param): Promise<any> => {
     try {
-      const response = await autoFetch.post('/refresh', param, {
+      const response = await autoFetch.post("/refresh", param, {
         headers: { Authorization: `Bearer ${param.authToken}` },
       });
-      console.log('Refreshing');
       return {
         isSuccess: true,
         newAuthToken: response.data.token,

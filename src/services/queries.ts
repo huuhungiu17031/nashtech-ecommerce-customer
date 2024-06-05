@@ -4,6 +4,7 @@ import {
   getCartByUserEmail,
   getCartDetail,
   getCategoryVms,
+  getOrder,
   getProductCardVmsByCategoryId,
   getProductDetailVm,
   getProductGalleryInCart,
@@ -105,5 +106,12 @@ export function useGetAverageRating(productId: number) {
     queryKey: [QUERY_KEYS.useGetAverageRating, productId],
     queryFn: () => getRatingAverage(productId),
     enabled: !!productId,
+  });
+}
+
+export function useGetOrder() {
+  return useQuery({
+    queryKey: [QUERY_KEYS.getOrder],
+    queryFn: () => getOrder(),
   });
 }

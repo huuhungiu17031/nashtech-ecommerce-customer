@@ -1,18 +1,18 @@
-export * from './route.name';
-export * from './constants';
-export * from './api-prefix';
-export * from './queryKey';
+export * from "./route.name";
+export * from "./constants";
+export * from "./api-prefix";
+export * from "./queryKey";
 export interface BrandVm {
   id: number;
   name: string;
-  imagePath: string | '';
+  imagePath: string | "";
 }
 
 export interface ProductCardInterface {
   id: number;
   productName: string;
   price: number;
-  thumbnail: string | '';
+  thumbnail: string | "";
   isFeatured: boolean;
 }
 
@@ -51,6 +51,7 @@ export interface CartDetail {
 }
 
 export interface CheckOutData {
+  id: number;
   paymentMethod: string;
   orderDetailVms: OrderDetailVm[];
 }
@@ -67,4 +68,20 @@ export interface Product {
   description: string;
   amount: number;
   cartId: number;
+}
+
+export interface OrderInformation {
+  order: Order;
+  orderDetailVm: OrderDetailVm[];
+}
+
+export interface Order {
+  createdAt: string;
+  createdBy: string;
+  updatedAt: string;
+  updatedBy?: any;
+  id: number;
+  paymentMethod: string;
+  status: string;
+  totalMoney: number;
 }

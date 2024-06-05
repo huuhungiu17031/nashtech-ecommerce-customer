@@ -197,6 +197,10 @@ const register = async ({
   return response.data;
 };
 
+const getOrder = async () => {
+  return (await autoFetch.get("order")).data;
+};
+
 export {
   getProductCardVmsByCategoryId,
   getCategoryVms,
@@ -217,4 +221,5 @@ export {
   login,
   register,
   createRatingAndComment,
+  getOrder,
 };
